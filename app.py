@@ -1,1 +1,1 @@
-print("Bonjour depuis TP DevOps")
+print("Bienvenue sur la page principale")
