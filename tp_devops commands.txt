@@ -1,0 +1,140 @@
+Exercice 1.1 : Depot local
+bash
+mkdir TP-devops
+cd TP-devops
+git init
+echo "# TP-devops" > README.md
+echo "Petite application Python pour pratiquer Git." >> README.md
+cat README.md
+echo "__pycache__/" > .gitignore
+echo "*.pyc" >> .gitignore
+echo ".venv/" >> .gitignore
+echo ".env" >> .gitignore
+git status
+git add README.md .gitignore
+git commit -m "Ajout du README et du .gitignore"
+echo 'print("Bonjour depuis TP DevOps")' > app.py
+python3 app.py
+git add app.py
+git commit -m "Ajout du fichier app.py"
+git status
+Exercice 1.2 : Branches et fusion avec conflit
+bash
+git switch -c feature/login
+echo 'print("Page de connexion")' > app.py
+git add app.py
+git commit -m "Ajout de la page de connexion"
+git switch main
+echo 'print("Bienvenue sur la page principale")' > app.py
+git add app.py
+git commit -m "Modification du message de bienvenue"
+git merge feature/login
+cat app.py
+nano app.py
+echo "# Conflit resolu" > CONFLITS.md
+echo "Fichier : app.py" >> CONFLITS.md
+echo "Cause : la meme ligne a ete modifiee sur main et sur feature/login." >> CONFLITS.md
+echo 'Resolution : j ai supprime les marqueurs <<<<<<<, ======= et >>>>>>> du fichier.' >> CONFLITS.md
+git status
+nano app.py
+git add app.py CONFLITS.md
+git commit -m "Resolution du conflit entre main et feature/login"
+
+Dans nano app.py, tu as supprime les marqueurs. Le fichier final contient :
+
+print("Bienvenue sur la page principale")
+print("Page de connexion")
+Exercice 1.2 : Question de reflexion (rebase)
+bash
+git switch -c test-main feature/login~1
+echo 'print("Bienvenue sur la page principale")' > app.py
+git add app.py
+git commit -m "Test rebase : modification sur main"
+git switch -c test-feature feature/login
+git log --oneline --graph --all
+git rebase test-main
+nano app.py
+git add app.py
+git rebase --continue
+git log --oneline --graph --all
+git switch main
+git branch -D test-main test-feature
+git log --oneline --graph --all
+Exercice 1.3 : Depot distant
+
+Sur le site GitHub : creation du depot public vide TP-devops (compte Malaktk5).
+
+bash
+git switch main
+git branch
+git remote add origin https://github.com/Malaktk5/TP-devops.git
+git branch -M main
+git push -u origin main
+git remote -v
+git log --oneline --graph --all
+cd ~
+git clone https://github.com/Malaktk5/TP-devops.git TP-devops-collegue
+cd TP-devops-collegue
+git switch -c feature/readme
+echo "Pour lancer l'application : python3 app.py" >> README.md
+git add README.md
+git commit -m "Ajout des instructions dans le README"
+git push -u origin feature/readme
+git log --oneline --graph --all
+
+Sur le site GitHub : ouverture de la Pull Request, commentaire sur une ligne, puis merge.
+
+bash
+cd ~/TP-devops
+git switch main
+cat README.md
+git pull
+cat README.md
+git log --oneline --graph --all
+Exercice 1.4 : Bonnes pratiques
+bash
+git status
+echo "# travail en cours" >> app.py
+git status
+git stash
+git status
+cat app.py
+git switch feature/login
+git switch main
+git stash pop
+git status
+cat app.py
+git restore app.py
+git status
+echo 'print("Ligne a annuler")' >> app.py
+git add app.py
+git commit -m "Ajout d'une ligne de test"
+git log --oneline
+git revert c7a408e --no-edit
+cat app.py
+git log --oneline
+git tag -a v1.0.0 -m "Premiere version stable"
+git tag
+git show v1.0.0
+git push
+git push origin v1.0.0
+Exercice 1.5 : Depot partage
+
+Depot cree avec le deuxieme compte : https://github.com/Aquila55/TP1-partage (Malaktk5 ajoute comme collaborateur).
+
+bash
+cd ~
+git clone https://github.com/Aquila55/TP1-partage.git
+cd TP1-partage
+pwd
+ls
+mkdir -p etudiants/touafek-malak
+echo "# Malak Touafek" > etudiants/touafek-malak/presentation.md
+echo "- Etudiante en 4eme annee Genie Logiciel, Universite de Bejaia" >> etudiants/touafek-malak/presentation.md
+cat etudiants/touafek-malak/presentation.md
+git status
+git add etudiants/touafek-malak/presentation.md
+git commit -m "Ajout de ma presentation"
+git pull
+git push
+git log --oneline
